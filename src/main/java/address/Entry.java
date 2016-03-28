@@ -1,17 +1,16 @@
 package address;
 
-class Entry {
+import java.time.LocalDate;
 
-    private String name;
-    private Sex sex;
+final class Entry {
+    final String name;
+    final Sex sex;
+    final LocalDate dob;
 
-    private Entry(String name, Sex sex) {
+    private Entry(String name, Sex sex, LocalDate dob) {
         this.name = name;
         this.sex = sex;
-    }
-
-    public Sex sex() {
-        return sex;
+        this.dob = dob;
     }
 
     public static class EntryBuilder {
@@ -21,6 +20,7 @@ class Entry {
         }
 
         private String name;
+        private LocalDate dob;
         private Sex sex = Sex.UNKNOWN;
 
         private EntryBuilder(String name) {
@@ -42,8 +42,13 @@ class Entry {
             return this;
         }
 
+        public EntryBuilder withDOB(LocalDate dob) {
+            this.dob = dob;
+            return this;
+        }
+
         public Entry make() {
-            return new Entry(name, sex);
+            return new Entry(name, sex, dob);
         }
     }
 }

@@ -3,6 +3,9 @@ package address;
 import address.Entry.EntryBuilder;
 import org.junit.Test;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import static address.Entry.EntryBuilder.personNamed;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
@@ -12,6 +15,23 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class TestAddressBook {
 
+    private static final LocalDate SOME_DATE = LocalDate.now();
+    private static final LocalDate SOME_EARLIER_DATE = LocalDate.now().minusMonths(42);
+
+    @Test public void oldestPersonInAddressBook() {
+        final AddressBook addressBook =
+                addressBookWithEntries(
+                        personNamed("John").withDOB(SOME_DATE),
+                        personNamed("Jane").withDOB(SOME_EARLIER_DATE));
+        assertThat(addressBook.oldest(), is("Jane"));
+    }
+
+
+    @Test(expected = AddressBook.OperationOnEmptyAddressBook.class)
+    public void findingOldestOnEmptyAddressBookYieldsException() {
+        emptyAddressBook().oldest();
+    }
+
     @Test public void countsOnlyMales() {
         final AddressBook addressBook =
                 addressBookWithEntries(
@@ -19,6 +39,10 @@ public class TestAddressBook {
                         personNamed("Jane").isFemale(),
                         personNamed("Stuart").isMale());
         assertThat(addressBook.countMales(), is(equalTo(2L)));
+    }
+
+    private AddressBook emptyAddressBook() {
+        return new AddressBook(new ArrayList<>());
     }
 
     public AddressBook addressBookWithEntries(EntryBuilder... entries) {
