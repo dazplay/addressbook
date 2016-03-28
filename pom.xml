@@ -42,12 +42,12 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>2.4</version>
                     <configuration>
-                        <finalName>fizzbuzz</finalName>
+                        <finalName>addressbook</finalName>
                         <archive>
                             <manifest>
                                 <addClasspath>true</addClasspath>
                                 <classpathPrefix>lib/</classpathPrefix>
-                                <mainClass>fizzbuzz.Main</mainClass>
+                                <mainClass>address.Main</mainClass>
                             </manifest>
                         </archive>
                     </configuration>

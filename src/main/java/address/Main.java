@@ -1,6 +1,8 @@
 package address;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static address.Entry.EntryBuilder.personNamed;
 import static address.Sex.sexFrom;
@@ -19,7 +22,7 @@ public class Main {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        AddressBook addresses = new AddressBook(loadedFrom(uriToResource("/addresses")));
+        AddressBook addresses = new AddressBook(loadedFrom(resourceFileStream("/addresses")));
 
         System.out.println("Number of males are: " + addresses.countMales());
         System.out.println("Oldest person is: " + addresses.oldest());
@@ -27,12 +30,13 @@ public class Main {
 
     }
 
-    private static URI uriToResource(String path) throws URISyntaxException {
-        return Main.class.getResource(path).toURI();
+    private static Stream<String> resourceFileStream(String path) {
+        return new BufferedReader(new InputStreamReader(
+                Main.class.getResourceAsStream(path))).lines();
     }
 
-    private static List<Entry> loadedFrom(URI resource) throws IOException, URISyntaxException {
-        return Files.lines(Paths.get(resource)).map(deserialiseEntry()).collect(toList());
+    private static List<Entry> loadedFrom(Stream<String> stream) throws IOException, URISyntaxException {
+        return stream.map(deserialiseEntry()).collect(toList());
     }
 
     private static Function<String, Entry> deserialiseEntry() {
