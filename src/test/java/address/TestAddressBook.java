@@ -14,9 +14,16 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 public class TestAddressBook {
-
     private static final LocalDate SOME_DATE = LocalDate.now();
     private static final LocalDate SOME_EARLIER_DATE = LocalDate.now().minusMonths(42);
+
+    @Test public void canQueryAgeDifferenceInDaysBetweenTwoEntries() {
+        final AddressBook addressBook =
+                addressBookWithEntries(
+                        personNamed("John").withDOB(SOME_DATE),
+                        personNamed("Jane").withDOB(SOME_DATE.minusDays(3)));
+        assertThat(addressBook.ageInDaysBetween("John", "Jane"), is(equalTo(3L)));
+    }
 
     @Test public void oldestPersonInAddressBook() {
         final AddressBook addressBook =

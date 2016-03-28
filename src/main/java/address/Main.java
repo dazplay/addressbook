@@ -23,6 +23,7 @@ public class Main {
 
         System.out.println("Number of males are: " + addresses.countMales());
         System.out.println("Oldest person is: " + addresses.oldest());
+        System.out.printf("Bill is %d days older than Paul\n", addresses.ageInDaysBetween("Paul Robinson", "Bill McKnight"));
 
     }
 

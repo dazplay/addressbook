@@ -1,5 +1,6 @@
 package address;
 
+import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
@@ -20,6 +21,16 @@ class AddressBook {
     public String oldest() {
         if (entries.isEmpty()) throw new OperationOnEmptyAddressBook();
         return entries.stream().sorted(byDOB()).findFirst().get().name;
+    }
+
+    public long ageInDaysBetween(String name1, String name2) {
+        Entry entry1 = findPersonNamed(name1);
+        Entry entry2 = findPersonNamed(name2);
+        return Math.abs(Duration.between(entry1.dob.atStartOfDay(), entry2.dob.atStartOfDay()).toDays());
+    }
+
+    private Entry findPersonNamed(String name) {
+        return entries.stream().filter(e -> name.equals(e.name)).findFirst().get();
     }
 
     private Comparator<Entry> byDOB() {
